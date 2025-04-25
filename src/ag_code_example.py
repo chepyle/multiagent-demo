@@ -32,10 +32,10 @@ agent = AssistantAgent(
     name="AssistantAgent",
     tools=[generate_md_tool],
     model_client=OpenAIChatCompletionClient(
-        model="openrouter/quasar-alpha",
+        model="meta-llama/llama-4-scout",
         api_key=os.environ['OPENROUTER_API_KEY'],
         base_url="https://openrouter.ai/api/v1",
-        model_info=ModelInfo(vision=False, function_calling=True, json_output=True, family=ModelFamily.R1),
+        model_info=ModelInfo(vision=False, function_calling=True, json_output=True, family=ModelFamily.UNKNOWN),
     ),
     description="Utilize surfer agent to research and generate a report based on a given topic",
     system_message="You are a helpful assistant. Your task is to research and synthesize data extracted into a high quality literature review including CORRECT references. You MUST write a final report that is formatted as a literature review with CORRECT references.  Your response should end with the word 'TERMINATE'",
@@ -44,19 +44,19 @@ agent = AssistantAgent(
 surfer = MultimodalWebSurfer(
     "WebSurfer",
     model_client=OpenAIChatCompletionClient(
-        model="google/gemini-2.0-flash-exp:free",
+        model="openai/gpt-4o-mini",
         api_key=os.environ['OPENROUTER_API_KEY'],
         base_url="https://openrouter.ai/api/v1",
-        model_info=ModelInfo(vision=False, function_calling=True, json_output=True, family=ModelFamily.UNKNOWN),
+        model_info=ModelInfo(vision=False, function_calling=True, json_output=True, family=ModelFamily.GPT_4O),
     ),
 )
 
 agent_team = SelectorGroupChat([agent, surfer], 
                                model_client=OpenAIChatCompletionClient(
-                                   model="openrouter/quasar-alpha",
+                                   model="meta-llama/llama-4-scout",
                                    api_key=os.environ['OPENROUTER_API_KEY'],
                                    base_url="https://openrouter.ai/api/v1",
-                                   model_info=ModelInfo(vision=False, function_calling=True, json_output=True, family=ModelFamily.R1),
+                                   model_info=ModelInfo(vision=False, function_calling=True, json_output=True, family=ModelFamily.UNKNOWN),
                                ),                               
                                termination_condition=TextMentionTermination("TERMINATE"))
 
